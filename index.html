@@ -47,7 +47,6 @@
     line-height: 1.6;
   }
   
-  /* TABELLA POS */
   .pos-table {
     width: 100%;
     border-collapse: collapse;
@@ -106,7 +105,6 @@
     line-height: 1.4;
   }
   
-  /* SELECT CUSTOM */
   select {
     width: 100%;
     padding: 10px 12px;
@@ -145,7 +143,6 @@
     cursor: not-allowed;
   }
   
-  /* FEEDBACK RIGA */
   .row-feedback {
     margin-top: 10px;
     padding: 10px 12px;
@@ -167,7 +164,6 @@
     color: #e74c3c;
   }
   
-  /* PULSANTI */
   .button-container {
     display: flex;
     gap: 15px;
@@ -203,7 +199,6 @@
     background: linear-gradient(135deg, #95a5a6, #7f8c8d);
   }
   
-  /* RISULTATO FINALE */
   .result-box {
     display: none;
     background: linear-gradient(135deg, #34495e, #2c3e50);
@@ -241,17 +236,10 @@
     margin-bottom: 25px;
   }
   
-  /* RESPONSIVE */
   @media (max-width: 768px) {
-    .pos-table {
-      font-size: 0.8rem;
-    }
-    .pos-table th, .pos-table td {
-      padding: 10px 8px;
-    }
-    h1 {
-      font-size: 1.5rem;
-    }
+    .pos-table { font-size: 0.8rem; }
+    .pos-table th, .pos-table td { padding: 10px 8px; }
+    h1 { font-size: 1.5rem; }
   }
 </style>
 </head>
@@ -262,7 +250,7 @@
   <p class="subtitle">Seleziona i Dispositivi di Protezione Collettiva (DPC) e Individuale (DPI) corretti per ogni fase</p>
   
   <div class="info-box">
-    <strong>📌 Istruzioni:</strong> Per ciascuna fase lavorativa, scegli dal menu a tendina i DPC e i DPI appropriati secondo le normative vigenti. Dopo aver compilato tutte le righe, clicca su "Verifica" per controllare le risposte.
+    <strong>📌 Istruzioni:</strong> Per ciascuna fase lavorativa, scegli la configurazione corretta di DPC e DPI. Attenzione ai dettagli tecnici: ogni opzione è plausibile ma solo una è conforme alle normative.
   </div>
   
   <table class="pos-table">
@@ -273,9 +261,7 @@
         <th style="width: 40%;">Dispositivi di Protezione Individuale (DPI)</th>
       </tr>
     </thead>
-    <tbody id="table-body">
-      <!-- Popolato dinamicamente -->
-    </tbody>
+    <tbody id="table-body"></tbody>
   </table>
   
   <div class="button-container">
@@ -298,22 +284,28 @@ const phases = [
     dpc: {
       options: [
         "Seleziona...",
-        "Parapetti metallici + tavole fermapiede + accessi protetti", // CORRETTO
-        "Rete anticaduta perimetrale con maglie 100mm",
-        "Barriere modulari + segnaletica verticale"
+        "Parapetti metallici h 1,00m + tavola fermapiede 15cm",
+        "Parapetti metallici h 1,00m + tavola fermapiede 20cm + accessi protetti",
+        "Parapetti in legno h 1,00m + tavola fermapiede 20cm"
       ],
-      correct: 1, // Posizione B
-      feedback: "✅ Parapetti UNI EN 13374 con fermapiede sono protezione primaria obbligatoria (Allegato XVIII D.Lgs. 81/2008)"
+      correct: 2,
+      feedback: {
+        correct: "✅ Corretto: parapetti metallici con fermapiede 20cm e accessi protetti (UNI EN 13374)",
+        wrong: "❌ Errore: fermapiede <20cm insufficiente (opz.1) / legno non conforme per ponteggi metallici (opz.3)"
+      }
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Elmetto EN 397 + guanti EN 388 + scarpe S3 EN ISO 20345",
-        "Imbracatura EN 361 + cordino + elmetto + scarpe S3", // CORRETTO
-        "Imbracatura + guanti antivibranti + occhiali"
+        "Imbracatura EN 361 + cordino semplice + elmetto",
+        "Imbracatura EN 361 + moschettone twist-lock + elmetto",
+        "Imbracatura EN 361 + cordino EN 354 + elmetto EN 397 + scarpe S3"
       ],
-      correct: 2, // Posizione C
-      feedback: "✅ Durante montaggio serve anticaduta completo: anche con parapetti parziali l'imbracatura è obbligatoria"
+      correct: 3,
+      feedback: {
+        correct: "✅ Corretto: sistema anticaduta completo con cordino conforme e calzature S3",
+        wrong: "❌ Errore: cordino semplice senza dissipatore (opz.1) / moschettone non sostituisce cordino (opz.2)"
+      }
     }
   },
   {
@@ -322,46 +314,28 @@ const phases = [
     dpc: {
       options: [
         "Seleziona...",
-        "Delimitazione perimetrale + segnaletica di pericolo",
-        "Rete anticaduta + aspirazione polveri + delimitazione area", // CORRETTO
-        "Barriere acustiche mobili + estintori"
+        "Rete anticaduta + aspirazione polveri + delimitazione area",
+        "Rete anticaduta perimetrale + barriera antipolvere",
+        "Delimitazione con nastro + segnaletica verticale"
       ],
-      correct: 2, // Posizione C
-      feedback: "✅ Demolizioni: rete protegge da caduta materiali, aspirazione confina polveri, delimitazione separa zona (art. 150 D.Lgs. 81/2008)"
+      correct: 1,
+      feedback: {
+        correct: "✅ Corretto: rete protegge da caduta materiali, aspirazione confina polveri, delimitazione separa",
+        wrong: "❌ Errore: manca aspirazione attiva (opz.2) / nastro bianco-rosso insufficiente (opz.3)"
+      }
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Casco + guanti rinforzati + visiera + maschera FFP3", // CORRETTO
-        "Elmetto + occhiali + guanti EN 388 + scarpe S1",
-        "Casco + maschera FFP2 + tuta monouso + guanti"
+        "Casco + guanti rinforzati + occhiali + maschera FFP2",
+        "Elmetto + guanti EN 388 + visiera + maschera FFP3",
+        "Casco + guanti rinforzati + visiera EN 166 + maschera FFP3"
       ],
-      correct: 1, // Posizione B
-      feedback: "✅ Protezione completa: FFP3 per polveri fini (non FFP2), visiera per schegge, guanti rinforzati per manipolazione"
-    }
-  },
-  {
-    name: "Lavori elettrici su quadro 400V",
-    desc: "Manutenzione impianto con tensione",
-    dpc: {
-      options: [
-        "Seleziona...",
-        "Quadro con interruttore magnetotermico + differenziale",
-        "Segregazione area + pannelli isolanti + differenziali 30mA", // CORRETTO
-        "Estintori CO₂ + cartelli divieto accesso"
-      ],
-      correct: 2, // Posizione C
-      feedback: "✅ Lavori elettrici: isolamento fisico, barriere dielettriche, protezioni differenziali attive (CEI 11-27)"
-    },
-    dpi: {
-      options: [
-        "Seleziona...",
-        "Guanti dielettrici EN 60903 + tappetino + occhiali", // CORRETTO
-        "Guanti isolanti classe 00 + scarpe antinfortunistiche",
-        "Guanti dielettrici + elmetto dielettrico + visiera"
-      ],
-      correct: 1, // Posizione B
-      feedback: "✅ Guanti classe 00 minimo, tappetino isolante, occhiali per arco elettrico (art. 82 D.Lgs. 81/2008)"
+      correct: 3,
+      feedback: {
+        correct: "✅ Corretto: visiera (non occhiali) per schegge + FFP3 (non FFP2) per polveri fini",
+        wrong: "❌ Errore: FFP2 insufficiente per demolizioni (opz.1) / guanti generici EN 388 non rinforzati (opz.2)"
+      }
     }
   },
   {
@@ -370,78 +344,61 @@ const phases = [
     dpc: {
       options: [
         "Seleziona...",
-        "Schermi ignifughi + estintori CO₂ + ventilazione forzata", // CORRETTO
-        "Estintori a polvere + segnaletica lavori in corso",
-        "Barriere metalliche + aspirazione fumi + estintori"
+        "Schermi ignifughi + estintori CO₂ + ventilazione forzata",
+        "Estintori a polvere + aspirazione fumi + segnaletica",
+        "Barriere metalliche + estintori CO₂ + zona interdetta"
       ],
-      correct: 1, // Posizione B
-      feedback: "✅ Schermi proteggono terzi, CO₂ per metalli, ventilazione per fumi (D.M. 3/9/2021 + permesso lavoro a caldo)"
+      correct: 1,
+      feedback: {
+        correct: "✅ Corretto: schermi proteggono terzi, CO₂ per metalli, ventilazione per fumi",
+        wrong: "❌ Errore: polvere non idonea per metalli (opz.2) / barriere metalliche non ignifughe (opz.3)"
+      }
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Maschera autoscurante + grembiule + guanti crosta",
-        "Maschera EN 175 + abbigliamento ignifugo + scarpe HRO", // CORRETTO
-        "Visiera da saldatore + guanti termici + tuta cotone"
+        "Maschera autoscurante EN 175 + grembiule ignifugo + guanti crosta + scarpe HRO",
+        "Visiera da saldatore + abbigliamento ignifugo + guanti termici",
+        "Maschera EN 175 + tuta in cotone + guanti anticalore"
       ],
-      correct: 2, // Posizione C
-      feedback: "✅ Maschera autoscurante EN 175, abbigliamento COMPLETO ignifugo, scarpe HRO (heat resistant outsole)"
+      correct: 1,
+      feedback: {
+        correct: "✅ Corretto: maschera autoscurante + abbigliamento COMPLETO ignifugo + scarpe HRO",
+        wrong: "❌ Errore: visiera fissa insufficiente (opz.2) / cotone non ignifugo (opz.3)"
+      }
     }
   },
   {
     name: "Scavo meccanico 2,5 m",
-    desc: "Fondazioni con miniescavatore",
+    desc: "Fondazioni con miniescavatore in terreno coesivo",
     dpc: {
       options: [
         "Seleziona...",
-        "Armature metalliche + passerelle + segnaletica", // CORRETTO
-        "Recinzione perimetrale + segnaletica verticale",
-        "Sbadacchiature in legno + accessi delimitati"
+        "Sbadacchiature in legno + passerelle + segnaletica",
+        "Armature metalliche UNI EN 13331 + passerelle protette + segnaletica",
+        "Recinzione perimetrale + delimitazione con coni"
       ],
-      correct: 1, // Posizione B
-      feedback: "✅ Scavi >1,5m: armature UNI EN 13331 obbligatorie, accessi sicuri, segnaletica (art. 119 D.Lgs. 81/2008)"
+      correct: 2,
+      feedback: {
+        correct: "✅ Corretto: armature metalliche obbligatorie >1,5m + accessi sicuri (art. 119 D.Lgs. 81/2008)",
+        wrong: "❌ Errore: legno non conforme per scavi profondi (opz.1) / recinzione non sostituisce armature (opz.3)"
+      }
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Elmetto + guanti + stivali + gilet alta visibilità",
-        "Casco + guanti antitaglio + stivali + giubbino EN 20471", // CORRETTO
-        "Casco + scarpe S3 + guanti EN 388 + gilet classe 2"
+        "Casco + guanti antitaglio + stivali rinforzati + giubbino EN 20471",
+        "Elmetto + guanti EN 388 + scarpe S3 + gilet alta visibilità",
+        "Casco + guanti da lavoro + stivali + gilet classe 2"
       ],
-      correct: 2, // Posizione C
-      feedback: "✅ Stivali (non scarpe) per fango, guanti antitaglio (non generici), giubbino classe 2 minimo (EN 20471)"
-    }
-  },
-  {
-    name: "Impermeabilizzazione copertura",
-    desc: "Guaina bituminosa a caldo su tetto 8m",
-    dpc: {
-      options: [
-        "Seleziona...",
-        "Parapetti perimetrali + bombole GPL in area ventilata",
-        "Parapetti + linee vita + GPL segregato e ventilato", // CORRETTO
-        "Rete anticaduta + segnaletica + estintori"
-      ],
-      correct: 2, // Posizione C
-      feedback: "✅ Parapetti obbligatori, linee vita per ancoraggi, GPL isolato (Allegato IV + D.M. antincendio)"
-    },
-    dpi: {
-      options: [
-        "Seleziona...",
-        "Imbracatura + guanti anticalore + maschera A2", // CORRETTO
-        "Imbracatura EN 361 + tuta ignifuga + visiera",
-        "Imbracatura + tuta termica + guanti + maschera"
-      ],
-      correct: 1, // Posizione B
-      feedback: "✅ Anticaduta (imbracatura), guanti ANTICALORE (non termici generici), maschera A2 per vapori organici bitume"
+      correct: 1,
+      feedback: {
+        correct: "✅ Corretto: stivali (non scarpe) per fango + guanti antitaglio + giubbino classe 2 minimo",
+        wrong: "❌ Errore: scarpe S3 inadatte per scavi (opz.2) / guanti generici insufficienti (opz.3)"
+      }
     }
   }
 ];
-
-let userAnswers = {
-  dpc: [],
-  dpi: []
-};
 
 function initTable() {
   const tbody = document.getElementById('table-body');
@@ -451,14 +408,12 @@ function initTable() {
     const row = document.createElement('tr');
     row.id = `row-${idx}`;
     
-    // Colonna fase
     const tdFase = document.createElement('td');
     tdFase.innerHTML = `
       <div class="fase-name">${phase.name}</div>
       <div class="fase-desc">${phase.desc}</div>
     `;
     
-    // Colonna DPC
     const tdDpc = document.createElement('td');
     const selectDpc = document.createElement('select');
     selectDpc.id = `dpc-${idx}`;
@@ -474,7 +429,6 @@ function initTable() {
     tdDpc.appendChild(selectDpc);
     tdDpc.appendChild(feedbackDpc);
     
-    // Colonna DPI
     const tdDpi = document.createElement('td');
     const selectDpi = document.createElement('select');
     selectDpi.id = `dpi-${idx}`;
@@ -510,43 +464,36 @@ function verifyAnswers() {
     
     let rowCorrect = true;
     
-    // Verifica DPC
     const answerDpc = parseInt(selectDpc.value);
     if (answerDpc === phase.dpc.correct) {
       selectDpc.classList.add('correct');
-      selectDpc.classList.remove('incorrect');
       feedbackDpc.className = 'row-feedback correct';
-      feedbackDpc.textContent = phase.dpc.feedback;
+      feedbackDpc.textContent = phase.dpc.feedback.correct;
       correctCount++;
     } else {
       selectDpc.classList.add('incorrect');
-      selectDpc.classList.remove('correct');
       feedbackDpc.className = 'row-feedback incorrect';
-      feedbackDpc.textContent = `❌ Errore. ${phase.dpc.feedback}`;
+      feedbackDpc.textContent = phase.dpc.feedback.wrong;
       rowCorrect = false;
     }
     feedbackDpc.style.display = 'block';
     selectDpc.disabled = true;
     
-    // Verifica DPI
     const answerDpi = parseInt(selectDpi.value);
     if (answerDpi === phase.dpi.correct) {
       selectDpi.classList.add('correct');
-      selectDpi.classList.remove('incorrect');
       feedbackDpi.className = 'row-feedback correct';
-      feedbackDpi.textContent = phase.dpi.feedback;
+      feedbackDpi.textContent = phase.dpi.feedback.correct;
       correctCount++;
     } else {
       selectDpi.classList.add('incorrect');
-      selectDpi.classList.remove('correct');
       feedbackDpi.className = 'row-feedback incorrect';
-      feedbackDpi.textContent = `❌ Errore. ${phase.dpi.feedback}`;
+      feedbackDpi.textContent = phase.dpi.feedback.wrong;
       rowCorrect = false;
     }
     feedbackDpi.style.display = 'block';
     selectDpi.disabled = true;
     
-    // Colora riga
     if (rowCorrect) {
       row.classList.add('correct');
     } else {
@@ -570,19 +517,19 @@ function showResult(correct, total) {
   if (percentage === 100) {
     title.textContent = '🏆 Compilazione Perfetta';
     score.className = 'result-score excellent';
-    message.innerHTML = 'Hai dimostrato piena conoscenza delle misure di protezione collettiva e individuale.<br><strong>Competenza operativa certificata per la redazione del POS.</strong>';
+    message.innerHTML = 'Hai dimostrato piena padronanza dei dettagli tecnici normativi.<br><strong>Competenza certificata per la redazione del POS.</strong>';
   } else if (percentage >= 75) {
     title.textContent = '✅ Buona Conoscenza';
     score.className = 'result-score good';
-    message.innerHTML = 'Alcune scelte perfettibili, ma nel complesso corrette.<br>Rivedi i feedback tecnici per consolidare i riferimenti normativi.';
+    message.innerHTML = 'Alcune scelte da perfezionare sui dettagli tecnici.<br>Rivedi i feedback per consolidare le specifiche normative.';
   } else if (percentage >= 50) {
-    title.textContent = '⚠️ Conoscenza Insufficiente';
+    title.textContent = '⚠️ Conoscenza Parziale';
     score.className = 'result-score poor';
-    message.innerHTML = 'Troppi errori nelle scelte di protezione.<br><strong>È necessario un approfondimento sulle normative DPC/DPI e sui criteri di selezione.</strong>';
+    message.innerHTML = 'Diversi errori sui requisiti specifici dei dispositivi.<br><strong>Necessario approfondimento su normative UNI EN e dettagli tecnici.</strong>';
   } else {
-    title.textContent = '❌ Conoscenza Critica';
+    title.textContent = '❌ Conoscenza Insufficiente';
     score.className = 'result-score poor';
-    message.innerHTML = 'La maggior parte delle protezioni selezionate non è conforme.<br><strong>Formazione urgente: un POS così redatto comporterebbe sospensione lavori.</strong>';
+    message.innerHTML = 'La maggior parte delle scelte non è conforme.<br><strong>Formazione urgente: un POS così redatto comporterebbe gravi non conformità.</strong>';
   }
   
   resultBox.classList.add('show');
