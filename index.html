@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UD16 – Completa la Tabella POS: DPC e DPI</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { 
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); 
+    color: #ecf0f1; 
+    padding: 30px 20px; 
+    min-height: 100vh; 
+  }
+  
+  .container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    background: rgba(44, 62, 80, 0.95); 
+    border-radius: 12px; 
+    padding: 40px; 
+    box-shadow: 0 15px 50px rgba(0,0,0,0.4); 
+  }
+  
+  h1 { 
+    font-size: 2rem; 
+    margin-bottom: 10px; 
+    color: #3498db; 
+    text-align: center; 
+  }
+  
+  .subtitle { 
+    text-align: center; 
+    color: #bdc3c7; 
+    margin-bottom: 30px; 
+    font-size: 0.95rem; 
+  }
+  
+  .info-box {
+    background: rgba(52, 152, 219, 0.15);
+    border-left: 4px solid #3498db;
+    padding: 15px 20px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  
+  /* TABELLA POS */
+  .pos-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    background: rgba(52, 73, 94, 0.6);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .pos-table thead {
+    background: linear-gradient(135deg, #2980b9, #3498db);
+  }
+  
+  .pos-table th {
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #fff;
+  }
+  
+  .pos-table td {
+    padding: 18px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    vertical-align: top;
+  }
+  
+  .pos-table tbody tr {
+    transition: background 0.3s;
+  }
+  
+  .pos-table tbody tr:hover {
+    background: rgba(52, 152, 219, 0.1);
+  }
+  
+  .pos-table tbody tr.correct {
+    background: rgba(46, 204, 113, 0.15);
+  }
+  
+  .pos-table tbody tr.incorrect {
+    background: rgba(231, 76, 60, 0.15);
+  }
+  
+  .fase-name {
+    font-weight: 600;
+    color: #3498db;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+  }
+  
+  .fase-desc {
+    font-size: 0.85rem;
+    color: #95a5a6;
+    line-height: 1.4;
+  }
+  
+  /* SELECT CUSTOM */
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(52, 73, 94, 0.8);
+    border: 2px solid #7f8c8d;
+    border-radius: 6px;
+    color: #ecf0f1;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ecf0f1' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 35px;
+  }
+  
+  select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  }
+  
+  select.correct {
+    border-color: #2ecc71;
+    background-color: rgba(46, 204, 113, 0.1);
+  }
+  
+  select.incorrect {
+    border-color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+  }
+  
+  select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  /* FEEDBACK RIGA */
+  .row-feedback {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    display: none;
+  }
+  
+  .row-feedback.correct {
+    background: rgba(46, 204, 113, 0.15);
+    border-left: 3px solid #2ecc71;
+    color: #2ecc71;
+  }
+  
+  .row-feedback.incorrect {
+    background: rgba(231, 76, 60, 0.15);
+    border-left: 3px solid #e74c3c;
+    color: #e74c3c;
+  }
+  
+  /* PULSANTI */
+  .button-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  
+  button {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+  }
+  
+  button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+  }
+  
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  button.reset {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+  }
+  
+  /* RISULTATO FINALE */
+  .result-box {
+    display: none;
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 30px;
+    text-align: center;
+    border: 2px solid #3498db;
+  }
+  
+  .result-box.show {
+    display: block;
+    animation: slideIn 0.5s ease;
+  }
+  
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .result-score {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 20px 0;
+  }
+  
+  .result-score.excellent { color: #2ecc71; }
+  .result-score.good { color: #f39c12; }
+  .result-score.poor { color: #e74c3c; }
+  
+  .result-message {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #bdc3c7;
+    margin-bottom: 25px;
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .pos-table {
+      font-size: 0.8rem;
+    }
+    .pos-table th, .pos-table td {
+      padding: 10px 8px;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>📋 Completa la Tabella POS</h1>
+  <p class="subtitle">Seleziona i Dispositivi di Protezione Collettiva (DPC) e Individuale (DPI) corretti per ogni fase</p>
+  
+  <div class="info-box">
+    <strong>📌 Istruzioni:</strong> Per ciascuna fase lavorativa, scegli dal menu a tendina i DPC e i DPI appropriati secondo le normative vigenti. Dopo aver compilato tutte le righe, clicca su "Verifica" per controllare le risposte.
+  </div>
+  
+  <table class="pos-table">
+    <thead>
+      <tr>
+        <th style="width: 25%;">Fase Lavorativa</th>
+        <th style="width: 35%;">Dispositivi di Protezione Collettiva (DPC)</th>
+        <th style="width: 40%;">Dispositivi di Protezione Individuale (DPI)</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+      <!-- Popolato dinamicamente -->
+    </tbody>
+  </table>
+  
+  <div class="button-container">
+    <button id="verify-btn" onclick="verifyAnswers()">✅ Verifica Risposte</button>
+    <button class="reset" onclick="location.reload()">🔄 Ricomincia</button>
+  </div>
+  
+  <div class="result-box" id="result-box">
+    <h2 id="result-title"></h2>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-message" id="result-message"></div>
+  </div>
+</div>
+
+<script>
+const phases = [
+  {
+    name: "Montaggio ponteggi",
+    desc: "Assemblaggio strutture metalliche su edificio a 3 piani",
+    dpc: {
+      options: [
+        "Seleziona...",
+        "Parapetti metallici UNI EN 13374 + tavole fermapiede",
+        "Solo rete anticaduta",
+        "Barriere mobili New Jersey"
+      ],
+      correct: 1,
+      feedback: "I parapetti con fermapiede sono protezione collettiva primaria per lavori in quota (D.Lgs. 81/2008, Allegato XVIII)"
+    },
+    dpi: {
+      options: [
+        "Seleziona...",
+        "Elmetto + guanti + scarpe S1",
+        "Imbracatura EN 361 + cordino EN 354 + elmetto EN 397 + scarpe S3",
+        "Solo gilet alta visibilità"
+      ],
+      correct: 2,
+      feedback: "Durante montaggio ponteggi serve protezione anticaduta completa (imbracatura + cordino) anche con parapetti parziali"
+    }
+  },
+  {
+    name: "Demolizione pareti interne",
+    desc: "Rimozione murature non portanti con martello demolitore",
+    dpc: {
+      options: [
+        "Seleziona...",
+        "Rete anticaduta UNI EN 1263 + barriera antipolvere + delimitazione area",
+        "Solo cartelli di divieto accesso",
+        "Parapetti in legno"
+      ],
+      correct: 1,
+      feedback: "Demolizioni richiedono confinamento polveri, protezione caduta materiali e separazione fisica area (art. 150-156 D.Lgs. 81/2008)"
+    },
+    dpi: {
+      options: [
+        "Seleziona...",
+        "Casco + guanti rinforzati + visiera EN 166 + maschera FFP3 EN 149",
+        "Solo occhiali da sole e mascherina chirurgica",
+        "Elmetto + tuta monouso"
+      ],
+      correct: 1,
+      feedback: "Protezione completa vie respiratorie (FFP3 per polveri fini), occhi (visiera), mani (guanti rinforzati) e testa (casco)"
+    }
+  },
+  {
+    name: "Lavori elettrici su quadro generale",
+    desc: "Manutenzione impianto con tensione 400V",
+    dpc: {
+      options: [
+        "Seleziona...",
+        "Segregazione area + pannelli isolanti + interruttori differenziali 30 mA",
+        "Solo cartello \"Lavori in corso\"",
+        "Estintori CO₂"
+      ],
+      correct: 1,
+      feedback: "Lavori elettrici richiedono isolamento fisico area, barriere dielettriche e protezioni differenziali (CEI 11-27)"
+    },
+    dpi: {
+      options: [
+        "Seleziona...",
+        "Guanti dielettrici EN 60903 + tappetino isolante + occhiali protettivi",
+        "Guanti in lattice + scarpe da ginnastica",
+        "Solo elmetto"
+      ],
+      correct: 1,
+      feedback: "Guanti dielettrici classe 00 o superiore, tappetino isolante e occhiali protezione arco elettrico (art. 82 D.Lgs. 81/2008)"
+    }
+  },
+  {
+    name: "Taglio e saldatura con fiamma ossiacetilenica",
+    desc: "Lavorazioni a caldo su strutture metalliche",
+    dpc: {
+      options: [
+        "Seleziona...",
+        "Schermi mobili ignifughi + estintori CO₂ + ventilazione forzata",
+        "Solo secchio d'acqua",
+        "Barriere in legno"
+      ],
+      correct: 1,
+      feedback: "Lavorazioni a caldo: schermi ignifughi per proteggere terzi, estintori a portata, ventilazione per fumi (D.M. 3/9/2021)"
+    },
+    dpi: {
+      options: [
+        "Seleziona...",
+        "Maschera autoscurante EN 175 + grembiule ignifugo + guanti crosta + scarpe HRO",
+        "Occhiali da sole + guanti in lattice",
+        "Tuta in cotone normale"
+      ],
+      correct: 1,
+      feedback: "Saldatura: maschera autoscurante (protezione raggi UV), abbigliamento ignifugo completo, scarpe resistenti calore (HRO)"
+    }
+  },
+  {
+    name: "Scavo meccanico profondità 2,5 m",
+    desc: "Fondazioni con miniescavatore in terreno coesivo",
+    dpc: {
+      options: [
+        "Seleziona...",
+        "Armature metalliche UNI EN 13331 + passerelle protette + segnaletica verticale",
+        "Solo nastro bianco-rosso",
+        "Barriere New Jersey"
+      ],
+      correct: 1,
+      feedback: "Scavi >1,5m: armature obbligatorie per stabilità pareti, accessi sicuri, delimitazione perimetrale (art. 119 D.Lgs. 81/2008)"
+    },
+    dpi: {
+      options: [
+        "Seleziona...",
+        "Casco + guanti antitaglio + stivali rinforzati + giubbino alta visibilità EN 20471",
+        "Scarpe da ginnastica + guanti in tessuto",
+        "Solo elmetto"
+      ],
+      correct: 1,
+      feedback: "Scavi: protezione testa (casco), mani (guanti antitaglio), piedi (stivali rinforzati), visibilità (gilet classe 2/3)"
+    }
+  },
+  {
+    name: "Impermeabilizzazione copertura con guaina bituminosa",
+    desc: "Posa membrane a caldo su tetto piano a 8 metri",
+    dpc: {
+      options: [
+        "Seleziona...",
+        "Parapetti perimetrali + linee vita + serbatoio GPL in area ventilata e recintata",
+        "Solo rete di sicurezza",
+        "Cartelli di pericolo"
+      ],
+      correct: 1,
+      feedback: "Coperture: parapetti obbligatori, linee vita per ancoraggi, bombole GPL isolate e ventilate (Allegato IV D.Lgs. 81/2008)"
+    },
+    dpi: {
+      options: [
+        "Seleziona...",
+        "Imbracatura EN 361 + tuta ignifuga + guanti anticalore + visiera + maschera A2",
+        "Tuta in cotone + guanti da lavoro",
+        "Solo scarpe antinfortunistiche"
+      ],
+      correct: 1,
+      feedback: "Bitume a caldo: anticaduta (imbracatura), protezione termica (guanti/tuta ignifuga), vie respiratorie (filtro A2 per vapori)"
+    }
+  }
+];
+
+let userAnswers = {
+  dpc: [],
+  dpi: []
+};
+
+function initTable() {
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+  
+  phases.forEach((phase, idx) => {
+    const row = document.createElement('tr');
+    row.id = `row-${idx}`;
+    
+    // Colonna fase
+    const tdFase = document.createElement('td');
+    tdFase.innerHTML = `
+      <div class="fase-name">${phase.name}</div>
+      <div class="fase-desc">${phase.desc}</div>
+    `;
+    
+    // Colonna DPC
+    const tdDpc = document.createElement('td');
+    const selectDpc = document.createElement('select');
+    selectDpc.id = `dpc-${idx}`;
+    phase.dpc.options.forEach((opt, i) => {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = opt;
+      selectDpc.appendChild(option);
+    });
+    const feedbackDpc = document.createElement('div');
+    feedbackDpc.className = 'row-feedback';
+    feedbackDpc.id = `feedback-dpc-${idx}`;
+    tdDpc.appendChild(selectDpc);
+    tdDpc.appendChild(feedbackDpc);
+    
+    // Colonna DPI
+    const tdDpi = document.createElement('td');
+    const selectDpi = document.createElement('select');
+    selectDpi.id = `dpi-${idx}`;
+    phase.dpi.options.forEach((opt, i) => {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = opt;
+      selectDpi.appendChild(option);
+    });
+    const feedbackDpi = document.createElement('div');
+    feedbackDpi.className = 'row-feedback';
+    feedbackDpi.id = `feedback-dpi-${idx}`;
+    tdDpi.appendChild(selectDpi);
+    tdDpi.appendChild(feedbackDpi);
+    
+    row.appendChild(tdFase);
+    row.appendChild(tdDpc);
+    row.appendChild(tdDpi);
+    tbody.appendChild(row);
+  });
+}
+
+function verifyAnswers() {
+  let correctCount = 0;
+  const totalQuestions = phases.length * 2; // DPC + DPI per ogni fase
+  
+  phases.forEach((phase, idx) => {
+    const selectDpc = document.getElementById(`dpc-${idx}`);
+    const selectDpi = document.getElementById(`dpi-${idx}`);
+    const feedbackDpc = document.getElementById(`feedback-dpc-${idx}`);
+    const feedbackDpi = document.getElementById(`feedback-dpi-${idx}`);
+    const row = document.getElementById(`row-${idx}`);
+    
+    let rowCorrect = true;
+    
+    // Verifica DPC
+    const answerDpc = parseInt(selectDpc.value);
+    if (answerDpc === phase.dpc.correct) {
+      selectDpc.classList.add('correct');
+      selectDpc.classList.remove('incorrect');
+      feedbackDpc.className = 'row-feedback correct';
+      feedbackDpc.textContent = `✅ ${phase.dpc.feedback}`;
+      correctCount++;
+    } else {
+      selectDpc.classList.add('incorrect');
+      selectDpc.classList.remove('correct');
+      feedbackDpc.className = 'row-feedback incorrect';
+      feedbackDpc.textContent = `❌ ${phase.dpc.feedback}`;
+      rowCorrect = false;
+    }
+    feedbackDpc.style.display = 'block';
+    selectDpc.disabled = true;
+    
+    // Verifica DPI
+    const answerDpi = parseInt(selectDpi.value);
+    if (answerDpi === phase.dpi.correct) {
+      selectDpi.classList.add('correct');
+      selectDpi.classList.remove('incorrect');
+      feedbackDpi.className = 'row-feedback correct';
+      feedbackDpi.textContent = `✅ ${phase.dpi.feedback}`;
+      correctCount++;
+    } else {
+      selectDpi.classList.add('incorrect');
+      selectDpi.classList.remove('correct');
+      feedbackDpi.className = 'row-feedback incorrect';
+      feedbackDpi.textContent = `❌ ${phase.dpi.feedback}`;
+      rowCorrect = false;
+    }
+    feedbackDpi.style.display = 'block';
+    selectDpi.disabled = true;
+    
+    // Colora riga
+    if (rowCorrect) {
+      row.classList.add('correct');
+    } else {
+      row.classList.add('incorrect');
+    }
+  });
+  
+  // Mostra risultato
+  showResult(correctCount, totalQuestions);
+  document.getElementById('verify-btn').disabled = true;
+}
+
+function showResult(correct, total) {
+  const resultBox = document.getElementById('result-box');
+  const title = document.getElementById('result-title');
+  const score = document.getElementById('result-score');
+  const message = document.getElementById('result-message');
+  
+  const percentage = (correct / total) * 100;
+  score.textContent = `${correct}/${total}`;
+  
+  if (percentage === 100) {
+    title.textContent = '🏆 Compilazione Perfetta';
+    score.className = 'result-score excellent';
+    message.innerHTML = 'Hai dimostrato piena conoscenza delle misure di protezione collettiva e individuale.<br><strong>Competenza operativa certificata per la redazione del POS.</strong>';
+  } else if (percentage >= 75) {
+    title.textContent = '✅ Buona Conoscenza';
+    score.className = 'result-score good';
+    message.innerHTML = 'Alcune scelte perfettibili, ma nel complesso corrette.<br>Rivedi i feedback tecnici per consolidare i riferimenti normativi.';
+  } else if (percentage >= 50) {
+    title.textContent = '⚠️ Conoscenza Insufficiente';
+    score.className = 'result-score poor';
+    message.innerHTML = 'Troppi errori nelle scelte di protezione.<br><strong>È necessario un approfondimento sulle normative DPC/DPI e sui criteri di selezione.</strong>';
+  } else {
+    title.textContent = '❌ Conoscenza Critica';
+    score.className = 'result-score poor';
+    message.innerHTML = 'La maggior parte delle protezioni selezionate non è conforme.<br><strong>Formazione urgente: un POS così redatto comporterebbe sospensione lavori.</strong>';
+  }
+  
+  resultBox.classList.add('show');
+}
+
+// Inizializzazione
+initTable();
+</script>
+
+</body>
+</html>
