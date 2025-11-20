@@ -298,22 +298,22 @@ const phases = [
     dpc: {
       options: [
         "Seleziona...",
-        "Parapetti metallici UNI EN 13374 + tavole fermapiede",
-        "Solo rete anticaduta",
-        "Barriere mobili New Jersey"
+        "Parapetti metallici + tavole fermapiede + accessi protetti", // CORRETTO
+        "Rete anticaduta perimetrale con maglie 100mm",
+        "Barriere modulari + segnaletica verticale"
       ],
-      correct: 1,
-      feedback: "I parapetti con fermapiede sono protezione collettiva primaria per lavori in quota (D.Lgs. 81/2008, Allegato XVIII)"
+      correct: 1, // Posizione B
+      feedback: "✅ Parapetti UNI EN 13374 con fermapiede sono protezione primaria obbligatoria (Allegato XVIII D.Lgs. 81/2008)"
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Elmetto + guanti + scarpe S1",
-        "Imbracatura EN 361 + cordino EN 354 + elmetto EN 397 + scarpe S3",
-        "Solo gilet alta visibilità"
+        "Elmetto EN 397 + guanti EN 388 + scarpe S3 EN ISO 20345",
+        "Imbracatura EN 361 + cordino + elmetto + scarpe S3", // CORRETTO
+        "Imbracatura + guanti antivibranti + occhiali"
       ],
-      correct: 2,
-      feedback: "Durante montaggio ponteggi serve protezione anticaduta completa (imbracatura + cordino) anche con parapetti parziali"
+      correct: 2, // Posizione C
+      feedback: "✅ Durante montaggio serve anticaduta completo: anche con parapetti parziali l'imbracatura è obbligatoria"
     }
   },
   {
@@ -322,118 +322,118 @@ const phases = [
     dpc: {
       options: [
         "Seleziona...",
-        "Rete anticaduta UNI EN 1263 + barriera antipolvere + delimitazione area",
-        "Solo cartelli di divieto accesso",
-        "Parapetti in legno"
+        "Delimitazione perimetrale + segnaletica di pericolo",
+        "Rete anticaduta + aspirazione polveri + delimitazione area", // CORRETTO
+        "Barriere acustiche mobili + estintori"
       ],
-      correct: 1,
-      feedback: "Demolizioni richiedono confinamento polveri, protezione caduta materiali e separazione fisica area (art. 150-156 D.Lgs. 81/2008)"
+      correct: 2, // Posizione C
+      feedback: "✅ Demolizioni: rete protegge da caduta materiali, aspirazione confina polveri, delimitazione separa zona (art. 150 D.Lgs. 81/2008)"
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Casco + guanti rinforzati + visiera EN 166 + maschera FFP3 EN 149",
-        "Solo occhiali da sole e mascherina chirurgica",
-        "Elmetto + tuta monouso"
+        "Casco + guanti rinforzati + visiera + maschera FFP3", // CORRETTO
+        "Elmetto + occhiali + guanti EN 388 + scarpe S1",
+        "Casco + maschera FFP2 + tuta monouso + guanti"
       ],
-      correct: 1,
-      feedback: "Protezione completa vie respiratorie (FFP3 per polveri fini), occhi (visiera), mani (guanti rinforzati) e testa (casco)"
+      correct: 1, // Posizione B
+      feedback: "✅ Protezione completa: FFP3 per polveri fini (non FFP2), visiera per schegge, guanti rinforzati per manipolazione"
     }
   },
   {
-    name: "Lavori elettrici su quadro generale",
-    desc: "Manutenzione impianto con tensione 400V",
+    name: "Lavori elettrici su quadro 400V",
+    desc: "Manutenzione impianto con tensione",
     dpc: {
       options: [
         "Seleziona...",
-        "Segregazione area + pannelli isolanti + interruttori differenziali 30 mA",
-        "Solo cartello \"Lavori in corso\"",
-        "Estintori CO₂"
+        "Quadro con interruttore magnetotermico + differenziale",
+        "Segregazione area + pannelli isolanti + differenziali 30mA", // CORRETTO
+        "Estintori CO₂ + cartelli divieto accesso"
       ],
-      correct: 1,
-      feedback: "Lavori elettrici richiedono isolamento fisico area, barriere dielettriche e protezioni differenziali (CEI 11-27)"
+      correct: 2, // Posizione C
+      feedback: "✅ Lavori elettrici: isolamento fisico, barriere dielettriche, protezioni differenziali attive (CEI 11-27)"
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Guanti dielettrici EN 60903 + tappetino isolante + occhiali protettivi",
-        "Guanti in lattice + scarpe da ginnastica",
-        "Solo elmetto"
+        "Guanti dielettrici EN 60903 + tappetino + occhiali", // CORRETTO
+        "Guanti isolanti classe 00 + scarpe antinfortunistiche",
+        "Guanti dielettrici + elmetto dielettrico + visiera"
       ],
-      correct: 1,
-      feedback: "Guanti dielettrici classe 00 o superiore, tappetino isolante e occhiali protezione arco elettrico (art. 82 D.Lgs. 81/2008)"
+      correct: 1, // Posizione B
+      feedback: "✅ Guanti classe 00 minimo, tappetino isolante, occhiali per arco elettrico (art. 82 D.Lgs. 81/2008)"
     }
   },
   {
-    name: "Taglio e saldatura con fiamma ossiacetilenica",
+    name: "Saldatura ossiacetilenica",
     desc: "Lavorazioni a caldo su strutture metalliche",
     dpc: {
       options: [
         "Seleziona...",
-        "Schermi mobili ignifughi + estintori CO₂ + ventilazione forzata",
-        "Solo secchio d'acqua",
-        "Barriere in legno"
+        "Schermi ignifughi + estintori CO₂ + ventilazione forzata", // CORRETTO
+        "Estintori a polvere + segnaletica lavori in corso",
+        "Barriere metalliche + aspirazione fumi + estintori"
       ],
-      correct: 1,
-      feedback: "Lavorazioni a caldo: schermi ignifughi per proteggere terzi, estintori a portata, ventilazione per fumi (D.M. 3/9/2021)"
+      correct: 1, // Posizione B
+      feedback: "✅ Schermi proteggono terzi, CO₂ per metalli, ventilazione per fumi (D.M. 3/9/2021 + permesso lavoro a caldo)"
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Maschera autoscurante EN 175 + grembiule ignifugo + guanti crosta + scarpe HRO",
-        "Occhiali da sole + guanti in lattice",
-        "Tuta in cotone normale"
+        "Maschera autoscurante + grembiule + guanti crosta",
+        "Maschera EN 175 + abbigliamento ignifugo + scarpe HRO", // CORRETTO
+        "Visiera da saldatore + guanti termici + tuta cotone"
       ],
-      correct: 1,
-      feedback: "Saldatura: maschera autoscurante (protezione raggi UV), abbigliamento ignifugo completo, scarpe resistenti calore (HRO)"
+      correct: 2, // Posizione C
+      feedback: "✅ Maschera autoscurante EN 175, abbigliamento COMPLETO ignifugo, scarpe HRO (heat resistant outsole)"
     }
   },
   {
-    name: "Scavo meccanico profondità 2,5 m",
-    desc: "Fondazioni con miniescavatore in terreno coesivo",
+    name: "Scavo meccanico 2,5 m",
+    desc: "Fondazioni con miniescavatore",
     dpc: {
       options: [
         "Seleziona...",
-        "Armature metalliche UNI EN 13331 + passerelle protette + segnaletica verticale",
-        "Solo nastro bianco-rosso",
-        "Barriere New Jersey"
+        "Armature metalliche + passerelle + segnaletica", // CORRETTO
+        "Recinzione perimetrale + segnaletica verticale",
+        "Sbadacchiature in legno + accessi delimitati"
       ],
-      correct: 1,
-      feedback: "Scavi >1,5m: armature obbligatorie per stabilità pareti, accessi sicuri, delimitazione perimetrale (art. 119 D.Lgs. 81/2008)"
+      correct: 1, // Posizione B
+      feedback: "✅ Scavi >1,5m: armature UNI EN 13331 obbligatorie, accessi sicuri, segnaletica (art. 119 D.Lgs. 81/2008)"
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Casco + guanti antitaglio + stivali rinforzati + giubbino alta visibilità EN 20471",
-        "Scarpe da ginnastica + guanti in tessuto",
-        "Solo elmetto"
+        "Elmetto + guanti + stivali + gilet alta visibilità",
+        "Casco + guanti antitaglio + stivali + giubbino EN 20471", // CORRETTO
+        "Casco + scarpe S3 + guanti EN 388 + gilet classe 2"
       ],
-      correct: 1,
-      feedback: "Scavi: protezione testa (casco), mani (guanti antitaglio), piedi (stivali rinforzati), visibilità (gilet classe 2/3)"
+      correct: 2, // Posizione C
+      feedback: "✅ Stivali (non scarpe) per fango, guanti antitaglio (non generici), giubbino classe 2 minimo (EN 20471)"
     }
   },
   {
-    name: "Impermeabilizzazione copertura con guaina bituminosa",
-    desc: "Posa membrane a caldo su tetto piano a 8 metri",
+    name: "Impermeabilizzazione copertura",
+    desc: "Guaina bituminosa a caldo su tetto 8m",
     dpc: {
       options: [
         "Seleziona...",
-        "Parapetti perimetrali + linee vita + serbatoio GPL in area ventilata e recintata",
-        "Solo rete di sicurezza",
-        "Cartelli di pericolo"
+        "Parapetti perimetrali + bombole GPL in area ventilata",
+        "Parapetti + linee vita + GPL segregato e ventilato", // CORRETTO
+        "Rete anticaduta + segnaletica + estintori"
       ],
-      correct: 1,
-      feedback: "Coperture: parapetti obbligatori, linee vita per ancoraggi, bombole GPL isolate e ventilate (Allegato IV D.Lgs. 81/2008)"
+      correct: 2, // Posizione C
+      feedback: "✅ Parapetti obbligatori, linee vita per ancoraggi, GPL isolato (Allegato IV + D.M. antincendio)"
     },
     dpi: {
       options: [
         "Seleziona...",
-        "Imbracatura EN 361 + tuta ignifuga + guanti anticalore + visiera + maschera A2",
-        "Tuta in cotone + guanti da lavoro",
-        "Solo scarpe antinfortunistiche"
+        "Imbracatura + guanti anticalore + maschera A2", // CORRETTO
+        "Imbracatura EN 361 + tuta ignifuga + visiera",
+        "Imbracatura + tuta termica + guanti + maschera"
       ],
-      correct: 1,
-      feedback: "Bitume a caldo: anticaduta (imbracatura), protezione termica (guanti/tuta ignifuga), vie respiratorie (filtro A2 per vapori)"
+      correct: 1, // Posizione B
+      feedback: "✅ Anticaduta (imbracatura), guanti ANTICALORE (non termici generici), maschera A2 per vapori organici bitume"
     }
   }
 ];
@@ -499,7 +499,7 @@ function initTable() {
 
 function verifyAnswers() {
   let correctCount = 0;
-  const totalQuestions = phases.length * 2; // DPC + DPI per ogni fase
+  const totalQuestions = phases.length * 2;
   
   phases.forEach((phase, idx) => {
     const selectDpc = document.getElementById(`dpc-${idx}`);
@@ -516,13 +516,13 @@ function verifyAnswers() {
       selectDpc.classList.add('correct');
       selectDpc.classList.remove('incorrect');
       feedbackDpc.className = 'row-feedback correct';
-      feedbackDpc.textContent = `✅ ${phase.dpc.feedback}`;
+      feedbackDpc.textContent = phase.dpc.feedback;
       correctCount++;
     } else {
       selectDpc.classList.add('incorrect');
       selectDpc.classList.remove('correct');
       feedbackDpc.className = 'row-feedback incorrect';
-      feedbackDpc.textContent = `❌ ${phase.dpc.feedback}`;
+      feedbackDpc.textContent = `❌ Errore. ${phase.dpc.feedback}`;
       rowCorrect = false;
     }
     feedbackDpc.style.display = 'block';
@@ -534,13 +534,13 @@ function verifyAnswers() {
       selectDpi.classList.add('correct');
       selectDpi.classList.remove('incorrect');
       feedbackDpi.className = 'row-feedback correct';
-      feedbackDpi.textContent = `✅ ${phase.dpi.feedback}`;
+      feedbackDpi.textContent = phase.dpi.feedback;
       correctCount++;
     } else {
       selectDpi.classList.add('incorrect');
       selectDpi.classList.remove('correct');
       feedbackDpi.className = 'row-feedback incorrect';
-      feedbackDpi.textContent = `❌ ${phase.dpi.feedback}`;
+      feedbackDpi.textContent = `❌ Errore. ${phase.dpi.feedback}`;
       rowCorrect = false;
     }
     feedbackDpi.style.display = 'block';
@@ -554,7 +554,6 @@ function verifyAnswers() {
     }
   });
   
-  // Mostra risultato
   showResult(correctCount, totalQuestions);
   document.getElementById('verify-btn').disabled = true;
 }
@@ -589,7 +588,6 @@ function showResult(correct, total) {
   resultBox.classList.add('show');
 }
 
-// Inizializzazione
 initTable();
 </script>
 
